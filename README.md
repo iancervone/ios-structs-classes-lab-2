@@ -5,60 +5,153 @@
 
 Using the Room struct below, write code that demonstrates that it is a value type.
 
-```swift
-struct Room {
-     let maxOccupancy: Int
-     let length: Double
-     let width: Double
-}
 ```
+
+
+struct Room {
+var maxOccupancy: Int
+let length: Double
+let width: Double
+}
+
+
+var room1 = Room(maxOccupancy: 30, length: 28.5, width: 35.3)
+
+var room2 = room1
+room2.maxOccupancy = 28
+
+print(room1.maxOccupancy)
+print(room2.maxOccupancy)
+
+
+
+```
+
+
+
+
 
 ## Question 2
 
 Using the Bike class below, write code that demonstrates that it is a reference type.
 
-```swift
-class Bike {
-    var wheelNumber = 2
-    var hasBell = false
-}
 ```
+
+
+class Bike {
+var wheelNumber = 2
+var hasBell = false
+}
+
+var Bike1 = Bike()
+var Bike2 = Bike1
+
+Bike1.hasBell = true
+
+print(Bike2.hasBell)
+print(Bike1.hasBell)
+
+
+```
+
+
+
+
 
 ## Question 3
 
 a. Given the Animal class below, create a Bird subclass with a new `canFly` property.
 
-```swift
+```
+
+
 class Animal {
-    var name: String = ""
-    var printDescription() {
-        print("I am an animal named \(name)")
-    }
+var name: String = ""
+func printDescription() {
+print("I am an animal named \(name)")
 }
+}
+
+class Bird : Animal {
+var canFly: Bool
+init(canFly: Bool) {
+self.canFly = canFly
+}
+override func printDescription() {
+if canFly == true {
+print("I am an animal named \(name) and i can fly")
+} else {
+print("I am an animal named \(name) and i can not fly")
+}
+}
+}
+
+var bird1 = Bird(canFly: true)
+bird1.name = "Johnny"
+bird1.printDescription()
+
+
+
+
 ```
 
 b. Override the printDescription method to have the instance of the Bird object print out its name and whether it can fly
 
 
+
+
+
+
+
 ## Question 4
 
-```swift
-class Bike {
-  let wheelNumber = 2
-  let wheelWidth = 1.3
-  var hasBell = true
-  func ringBell() {
-    if hasBell {
-      print("Ring!")
-    }
-  }
-}
 ```
 
+class Bike {
+let wheelNumber = 2
+let wheelWidth = 1.3
+var hasBell = true
+func ringBell() {
+if hasBell {
+print("Ring!")
+}
+}
+
+}
+
+class LoudBike : Bike {
+override func ringBell() {
+if hasBell {
+print("RING!")
+}
+}
+
+func ringBell(times: Int) {
+for _ in  1...times {
+ringBell()
+}
+}
+
+}
+
+var bike1 = LoudBike()
+
+bike1.ringBell()
+
+bike1.ringBell(times: 3)
+
+
+
+```
 
 a. Create a `LoudBike` subclass of Bike.  When you call `ringBell` it should ring the bell in all caps.
 
 b. Give `LoudBike` a new method called `ringBell(times:)` that rings the bell a given number of times
+
+
+
+
+
 
 
 ## Question 5
@@ -83,15 +176,69 @@ e. Override the `name` property of `Rectangle` so that it returns a String conta
 
 f. (BONUS) What happens when you run the code below?  Explain why.
 
-```swift
-var myShapes = [Shape]()
+```
 
-myShapes.append(Square())
-myShapes.append(Rectangle())
+class Shape {
+var name: String {
+//        return "This is a generic shape"
+return "Name: \(type(of: self)), Area: \(area), Perimiter: \(perimeter)"
 
-for shape in myShapes {
-    print("This is a \(shape.name) with an area of \(shape.area) and a perimeter of \(shape.perimeter)")
 }
+var area: Double { fatalError("Subclasses must override the area") }
+var perimeter: Double { fatalError("Subclasses must override the perimeter") }
+}
+
+class Square : Shape {
+var sideLength = 5
+override var area: Double {
+get {
+return Double(sideLength * sideLength)
+}
+}
+override var perimeter: Double {
+get {
+return Double(sideLength * 4)
+}
+}
+//    override var name: String {
+//        get {
+//            return "Name: \(type(of: self)), Area: \(area), Perimiter: \(perimeter)"
+//        }
+//    }
+}
+
+var square1 = Square()
+print(square1.name)
+
+class Rectangle: Shape {
+var width = 6
+var height = 4
+override var area: Double {
+get {
+return Double(width * height)
+}
+}
+override var perimeter: Double {
+get {
+return Double((width * 2) + (height * 2))
+}
+}
+//    override var name: String {
+//        get {
+//            return "Name: Rectangle, Area: \(area), Perimiter: \(perimeter)"
+//        }
+//    }
+}
+
+var rectangle1 = Rectangle()
+print(rectangle1.name)
+
+
+//Point F:
+//the var myShapes is making an empty array from the class Shapes.  this array is then appended with the info from the subclasses Square and Rectangle.  The for loop then goes through the array myShapes and prints using string interpolation with the info from each iteration of this for loop
+
+
+
 ```
 
 ## Question 6
@@ -147,11 +294,58 @@ c. Add another method to `Circle` that returns a random point on the circle
 Hint: Given the radius of a circle and the x value of a point on the circle, the y value of the point is defined by:
 
 ```
-√(r^2) - (x^2)
-```
+struct Point {
+let x: Double
+let y: Double
 
-```swift
-circleOne.contains(circleOne.getRandomPoint()) //Should always be true
+func distance(to point: Point) -> Double {
+
+let horizontalDistance = self.x - point.x
+let verticalDistance = self.y - point.y
+let distanceBetweenTwoPoints = sqrt(horizontalDistance * horizontalDistance + verticalDistance * verticalDistance)
+return distanceBetweenTwoPoints
+}
+}
+
+//let pointOne = Point(x: 0, y: 0)
+//let pointTwo = Point(x: 10, y: 10)
+
+//let circleOne = Circle(radius: 5, center: pointOne)
+//
+//print(pointOne.distance(to: pointTwo))
+
+struct Circle {
+let radius: Double
+let center: Point
+
+func contains(point: Point) -> Bool {
+
+return center.distance(to: point) == radius
+
+}
+
+func getRandomPoint() -> Point {
+let x: Double = Double.random(in: (0 - radius)...radius)
+
+let y = sqrt((radius * radius) - (x * x))
+
+return Point(x: x, y: y)
+}
+}
+
+
+
+
+let pointOne = Point(x: 0, y: 0)
+let circleOne = Circle(radius: 5, center: pointOne)
+let pointTwo = Point(x: 5, y: 0)
+let pointThree = Point(x: 4, y: 0)
+let pointFour = Point(x: sqrt(12.5), y: sqrt(12.5))
+circleOne.contains(point:pointTwo) //true
+circleOne.contains(point:pointThree) // false
+circleOne.contains(point:pointFour) //true
+
+circleOne.contains(point: circleOne.getRandomPoint())e.contains(circleOne.getRandomPoint()) //Should always be true
 ```
 
 
